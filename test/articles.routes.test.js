@@ -41,5 +41,31 @@ describe('routes: articles', () => {
         });
     });
   });
-  /** every subsequent test must be added here !! **/
+  describe(`GET ${PATH}/:id`, () => {
+    it('should return a single resource', done => {
+      chai
+        .request(server)
+        .get(`${PATH}/1`)
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.eql(200);
+          res.type.should.eql('application/json');
+          res.body.data.length.should.eql(1);
+          res.body.data[0].should.include.keys('id', 'title', 'body', 'tags');
+          done();
+        });
+    });
+    it('should return an error when the requested article does not exists', done => {
+      chai
+        .request(server)
+        .get(`${PATH}/9999`)
+        .end((err, res) => {
+          should.exist(err);
+          res.status.should.eql(404);
+          res.type.should.eql('application/json');
+          res.body.error.should.eql('The requested resource does not exists');
+          done();
+        });
+    });
+  });
 });
