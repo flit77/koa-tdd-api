@@ -12,6 +12,7 @@ module.exports = {
     },
     seeds: {
       directory: path.join(BASE_PATH, 'seeds')
-    }
+    },
+    useNullAsDefault: true
   }
 };

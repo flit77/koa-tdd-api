@@ -8,7 +8,9 @@ const PATH = '/api/v1/articles';
 const chai = require('chai');
 const should = chai.should();
 const chaiHttp = require('chai-http');
+
 chai.use(chaiHttp);
+
 // Rollback, commit and populate the test database before each test
 describe('routes: articles', () => {
   beforeEach(() => {
@@ -21,10 +23,12 @@ describe('routes: articles', () => {
         return knex.seed.run();
       });
   });
+
   // Rollback the migration after each test
   afterEach(() => {
     return knex.migrate.rollback();
   });
+
   // Here comes the first test
   describe(`GET ${PATH}`, () => {
     it('should return all the resources', done => {
