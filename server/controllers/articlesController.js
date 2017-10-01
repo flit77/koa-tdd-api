@@ -13,4 +13,24 @@ const index = async ctx => {
   }
 };
 
-module.exports = { index };
+const show = async ctx => {
+  try {
+    const { id } = ctx.params;
+    const article = await knex('articles')
+      .select()
+      .where({ id });
+    if (!article.length) {
+      throw new Error('The requested resource does not exists');
+    }
+    ctx.body = {
+      data: article
+    };
+  } catch (error) {
+    ctx.status = 404;
+    ctx.body = {
+      error: error.message
+    };
+  }
+};
+
+module.exports = { index, show };
