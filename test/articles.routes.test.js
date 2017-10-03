@@ -45,6 +45,7 @@ describe('routes: articles', () => {
         });
     });
   });
+
   describe(`GET ${PATH}/:id`, () => {
     it('should return a single resource', done => {
       chai
@@ -68,6 +69,47 @@ describe('routes: articles', () => {
           res.status.should.eql(404);
           res.type.should.eql('application/json');
           res.body.error.should.eql('The requested resource does not exists');
+          done();
+        });
+    });
+  });
+
+  describe(`POST ${PATH}`, () => {
+    it('should return the newly added resource identifier alongside a Location header', done => {
+      chai
+        .request(server)
+        .post(`${PATH}`)
+        .send({
+          title: 'A test article',
+          body: "The test article's body",
+          tags: 'test, nodejs'
+        })
+        .end((err, res) => {
+          should.not.exist(err);
+          res.status.should.eql(201);
+          res.should.have.header('Location');
+          res.type.should.eql('application/json');
+          res.body.data.length.should.eql(1);
+          res.body.data[0].should.be.a('number');
+          done();
+        });
+    });
+    it('should return an error when the resource already exists', done => {
+      chai
+        .request(server)
+        .post(`${PATH}`)
+        .send({
+          title:
+            'An Introduction to Building Test Driven RESTful APIs with Koa',
+          body:
+            'An Introduction to Building Test Driven RESTful APIs with Koa ... body',
+          tags: 'koa, tdd, nodejs'
+        })
+        .end((err, res) => {
+          should.exist(err);
+          res.status.should.eql(409);
+          res.type.should.eql('application/json');
+          res.body.error.should.eql('The resource already exists');
           done();
         });
     });
