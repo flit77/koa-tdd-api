@@ -5,5 +5,6 @@ const BASE_URL = `/api/v1/articles`;
 
 router.get(`${BASE_URL}`, articlesController.index);
 router.get(`${BASE_URL}/:id`, articlesController.show);
+router.post(`${BASE_URL}`, articlesController.create);
 
 module.exports = router;
